@@ -1,0 +1,51 @@
+{
+    "name": "mimisk13/stagebox",
+    "description": ":package_description",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Author Name",
+            "email": "author@email.com",
+            "homepage": "http://author.com"
+        }
+    ],
+    "homepage": "https://github.com/laravel/stagebox",
+    "keywords": ["Laravel", "Stagebox"],
+    "require": {
+        "php": "^8.4",
+        "illuminate/support": "^12.0|^13.0",
+        "mimisk/laravel-toolbox": "dev-main"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5.3|^12.0.1",
+        "orchestra/testbench": "^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laravel\\Stagebox\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laravel\\Stagebox\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Laravel\\Stagebox\\StageboxServiceProvider"
+            ],
+            "aliases": {
+                "Stagebox": "Laravel\\Stagebox\\Facades\\Stagebox"
+            }
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/MimisK13/laravel-toolbox"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
