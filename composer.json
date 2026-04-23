@@ -1,51 +1,53 @@
 {
-    "name": "mimisk13/stagebox",
-    "description": ":package_description",
+    "name": "mimisk/stagebox",
+    "description": "Laravel package for stagebox management with owner scoping and slug generation.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "Author Name",
-            "email": "author@email.com",
-            "homepage": "http://author.com"
+            "name": "Mimis K",
+            "email": "mimisk88@gmail.com",
+            "homepage": "https://mimisk.com"
         }
     ],
-    "homepage": "https://github.com/laravel/stagebox",
+    "homepage": "https://github.com/MimisK13/laravel-stagebox",
     "keywords": ["Laravel", "Stagebox"],
     "require": {
         "php": "^8.4",
         "illuminate/support": "^12.0|^13.0",
-        "mimisk/laravel-toolbox": "dev-main"
+        "mimisk/laravel-toolbox": "^0.0.1"
     },
     "require-dev": {
+        "pestphp/pest": "^4.0",
         "phpunit/phpunit": "^11.5.3|^12.0.1",
         "orchestra/testbench": "^10.0|^11.0"
     },
     "autoload": {
         "psr-4": {
-            "Laravel\\Stagebox\\": "src/"
+            "Mimisk\\Stagebox\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Laravel\\Stagebox\\Tests\\": "tests"
+            "Mimisk\\Stagebox\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "@php vendor/pestphp/pest/bin/pest --configuration phpunit.xml --compact"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Laravel\\Stagebox\\StageboxServiceProvider"
+                "Mimisk\\Stagebox\\StageboxServiceProvider"
             ],
             "aliases": {
-                "Stagebox": "Laravel\\Stagebox\\Facades\\Stagebox"
+                "Stagebox": "Mimisk\\Stagebox\\Facades\\Stagebox"
             }
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/MimisK13/laravel-toolbox"
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }

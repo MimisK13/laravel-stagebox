@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Stagebox\Facades;
+namespace Mimisk\Stagebox\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -8,8 +8,6 @@ class Stagebox extends Facade
 {
     /**
      * Get the registered name of the component.
-     *
-     * @return string
      */
     protected static function getFacadeAccessor(): string
     {

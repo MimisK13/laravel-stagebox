@@ -1,25 +1,65 @@
 # Stagebox
 
+[![Tests](https://github.com/MimisK13/laravel-stagebox/actions/workflows/tests.yml/badge.svg)](https://github.com/MimisK13/laravel-stagebox/actions/workflows/tests.yml)
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![Build Status][ico-travis]][link-travis]
-[![StyleCI][ico-styleci]][link-styleci]
 
-This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
+`mimisk/stagebox` is a Laravel package for managing stagebox records with built-in migrations and automatic slug generation.
 
 ## Installation
 
 Via Composer
 
 ```bash
-composer require laravel/stagebox
+composer require mimisk/stagebox
 ```
 
 ## Usage
 
-## Change log
+This package provides:
+- `Mimisk\Stagebox\Models\Stagebox` Eloquent model
+- internal package migration for the `stageboxes` table
+- owner-scoped stageboxes via polymorphic relation (`stageboxable_type` / `stageboxable_id`)
 
-Please see the [changelog](changelog.md) for more information on what has changed recently.
+Run migrations:
+
+```bash
+php artisan migrate
+```
+
+Use the model:
+
+```php
+use Mimisk\Stagebox\Models\Stagebox;
+
+$stagebox = Stagebox::create([
+    'name' => 'A',
+    'channels' => 12,
+    'returns' => 4,
+    'color' => 'brown',
+    'notes' => 'Drum Riser',
+]);
+```
+
+The `slug` is generated automatically from `name` when not provided.
+
+Fields:
+- `name` (string)
+- `slug` (unique per owner scope)
+- `channels` (unsigned tiny integer)
+- `returns` (unsigned tiny integer, default `0`)
+- `color` (string, default `black`)
+- `notes` (nullable text)
+- `timestamps`
+
+Query examples:
+
+```php
+use Mimisk\Stagebox\Models\Stagebox;
+
+$all = Stagebox::orderBy('name')->get();
+$single = Stagebox::where('slug', 'a')->first();
+```
 
 ## Testing
 
@@ -27,31 +67,23 @@ Please see the [changelog](changelog.md) for more information on what has change
 composer test
 ```
 
-## Contributing
-
-Please see [contributing.md](contributing.md) for details and a todolist.
-
-## Security
-
-If you discover any security related issues, please email author@email.com instead of using the issue tracker.
-
 ## Credits
 
-- [Author Name][link-author]
+- [MimisK13][link-author]
 - [All Contributors][link-contributors]
 
 ## License
 
 MIT. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/laravel/stagebox.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/laravel/stagebox.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/laravel/stagebox/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/mimisk/stagebox.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/mimisk/stagebox.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/MimisK13/laravel-stagebox/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
 
-[link-packagist]: https://packagist.org/packages/laravel/stagebox
-[link-downloads]: https://packagist.org/packages/laravel/stagebox
-[link-travis]: https://travis-ci.org/laravel/stagebox
+[link-packagist]: https://packagist.org/packages/mimisk/stagebox
+[link-downloads]: https://packagist.org/packages/mimisk/stagebox
+[link-travis]: https://travis-ci.org/MimisK13/laravel-stagebox
 [link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/laravel
-[link-contributors]: ../../contributors
+[link-author]: https://github.com/MimisK13
+[link-contributors]: https://github.com/MimisK13/laravel-stagebox/contributors

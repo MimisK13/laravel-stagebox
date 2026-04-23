@@ -10,13 +10,16 @@ return new class extends Migration
     {
         Schema::create('stageboxes', function (Blueprint $table): void {
             $table->id();
+            $table->morphs('stageboxable');
             $table->string('name');
-            $table->string('slug')->unique();
-            $table->unsignedTinyInteger('channels');
+            $table->string('slug');
+            $table->unsignedTinyInteger('channels')->default(12);
             $table->unsignedTinyInteger('returns')->default(0);
-            $table->string('color')->nullable();
+            $table->string('color')->default('black');
             $table->text('notes')->nullable();
             $table->timestamps();
+
+            $table->unique(['stageboxable_type', 'stageboxable_id', 'slug']);
         });
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Stagebox;
+namespace Mimisk\Stagebox;
 
 class Stagebox
 {
