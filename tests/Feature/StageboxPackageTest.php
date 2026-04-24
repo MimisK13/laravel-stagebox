@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Mimisk\Stagebox\Enums\StageboxColor;
 use Mimisk\Stagebox\Models\Stagebox;
@@ -106,4 +107,38 @@ it('casts color as stagebox color enum', function (): void {
     expect($stagebox->color)->toBeInstanceOf(StageboxColor::class)
         ->and($stagebox->color)->toBe(StageboxColor::GREEN)
         ->and($stagebox->color->hex())->toBe('#008000');
+});
+
+it('cleans orphan stageboxes with the artisan command', function (): void {
+    $owner = TestOwner::query()->create(['name' => 'Owner D']);
+
+    $owner->stageboxes()->create([
+        'name' => 'Attached Rack',
+        'channels' => 12,
+        'returns' => 0,
+        'color' => StageboxColor::BLACK,
+    ]);
+
+    $owner->delete();
+
+    DB::table('stageboxes')->insert([
+        'stageboxable_type' => 'Unknown\\Owner',
+        'stageboxable_id' => 123,
+        'name' => 'Unknown Rack',
+        'slug' => 'unknown-rack',
+        'channels' => 12,
+        'returns' => 0,
+        'color' => 'black',
+        'notes' => null,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    expect(Stagebox::query()->count())->toBe(2);
+
+    $this->artisan('stagebox:clean-orphans')
+        ->expectsOutput('Deleted 2 orphan stagebox(es).')
+        ->assertSuccessful();
+
+    expect(Stagebox::query()->count())->toBe(0);
 });

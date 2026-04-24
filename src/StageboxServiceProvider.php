@@ -3,6 +3,7 @@
 namespace Mimisk\Stagebox;
 
 use Illuminate\Support\ServiceProvider;
+use Mimisk\Stagebox\Commands\CleanOrphanStageboxesCommand;
 
 class StageboxServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,12 @@ class StageboxServiceProvider extends ServiceProvider
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                CleanOrphanStageboxesCommand::class,
+            ]);
+        }
     }
 
     /**

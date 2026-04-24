@@ -27,18 +27,38 @@ Run migrations:
 php artisan migrate
 ```
 
-Use the model:
+Define relation on your owner model:
 
 ```php
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Mimisk\Stagebox\Models\Stagebox;
 
-$stagebox = Stagebox::create([
+class Festival extends Model
+{
+    public function stageboxes(): MorphMany
+    {
+        return $this->morphMany(Stagebox::class, 'stageboxable');
+    }
+}
+```
+
+Create/attach a stagebox through owner relation:
+
+```php
+$festival->stageboxes()->create([
     'name' => 'A',
     'channels' => 12,
     'returns' => 4,
-    'color' => 'brown',
+    'color' => 'black',
     'notes' => 'Drum Riser',
 ]);
+```
+
+Attach an existing stagebox to owner:
+
+```php
+$stagebox->stageboxable()->associate($festival);
+$stagebox->save();
 ```
 
 The `slug` is generated automatically from `name` when not provided.
@@ -58,7 +78,41 @@ Query examples:
 use Mimisk\Stagebox\Models\Stagebox;
 
 $all = Stagebox::orderBy('name')->get();
-$single = Stagebox::where('slug', 'a')->first();
+$single = Stagebox::query()
+    ->where('stageboxable_type', $festival->getMorphClass())
+    ->where('stageboxable_id', $festival->getKey())
+    ->where('slug', 'a')
+    ->first();
+```
+
+### Why detach is not supported
+
+`stageboxable_type` and `stageboxable_id` are required columns (`morphs`, non-null), so a stagebox must always belong to an owner.
+This means you can re-attach to another owner, but not detach to a null owner.
+
+### Prevent orphan stageboxes when owner is deleted
+
+Polymorphic relations do not get database-level cascade delete by default.
+Delete associated stageboxes before deleting the owner:
+
+```php
+public function destroy(Festival $festival): RedirectResponse
+{
+    $festival->stageboxes()->delete();
+    $festival->delete();
+
+    return redirect()
+        ->route('festivals.index')
+        ->with('status', 'Festival deleted.');
+}
+```
+
+### Maintenance command
+
+The package includes a maintenance command that deletes orphan stageboxes:
+
+```bash
+php artisan stagebox:clean-orphans
 ```
 
 ## Testing
